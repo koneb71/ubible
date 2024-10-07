@@ -25,7 +25,7 @@ class DatabaseHelper {
   _initDatabase() async {
     WidgetsFlutterBinding.ensureInitialized();
     final databasesPath = await getDatabasesPath();
-    final path = p.join(databasesPath, 'bible.db');
+    final path = p.join(databasesPath, _databaseName);
 
     // Check if the database already exists
     if (!File(path).existsSync()) {
@@ -39,8 +39,9 @@ class DatabaseHelper {
       }
 
       // Load database from assets
-      final data = await rootBundle.load('assets/bible.db');
-      final bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+      final data = await rootBundle.load('assets/$_databaseName');
+      final bytes =
+          data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
 
       // Write the bytes to the file
       await File(path).writeAsBytes(bytes, flush: true);

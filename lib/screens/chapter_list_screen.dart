@@ -22,7 +22,7 @@ class _ChapterListScreenState extends State<ChapterListScreen> {
 
   Future<List<int>> _fetchChapters() async {
     final db = await DatabaseHelper.instance.database;
-    final maps = await db.select(
+    final maps = db.select(
       'SELECT DISTINCT chapter FROM ceb_content WHERE book = ?',
       [widget.book],
     );
