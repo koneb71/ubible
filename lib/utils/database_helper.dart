@@ -1,9 +1,10 @@
 import 'dart:io';
-import 'package:flutter/services.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
-// import 'package:sqflite/sqflite.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/widgets.dart';
+import 'package:path/path.dart' as p;
+import 'package:sqflite/sqflite.dart' show getDatabasesPath;
+import 'package:sqlite3/sqlite3.dart';
+// import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class DatabaseHelper {
   static final _databaseName = "bible.db";
@@ -22,31 +23,33 @@ class DatabaseHelper {
   }
 
   _initDatabase() async {
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, _databaseName);
+    WidgetsFlutterBinding.ensureInitialized();
+    final databasesPath = await getDatabasesPath();
+    final path = p.join(databasesPath, 'bible.db');
 
-    try {
-      // Check if the database exists
-      bool exists = await databaseExists(path);
+    // Check if the database already exists
+    if (!File(path).existsSync()) {
+      print('Copying database from assets to $path');
 
-      if (!exists) {
-        // Copy from assets
-        ByteData data = await rootBundle.load('assets/bible.db');
-        List<int> bytes = data.buffer.asUint8List();
-
-        // Write the bytes to the file
-        await File(path).writeAsBytes(bytes, flush: true);
-        print('Database copied to $path');
-      } else {
-        print('Database already exists at $path');
+      // Ensure the directory exists
+      try {
+        await Directory(p.dirname(path)).create(recursive: true);
+      } catch (e) {
+        print('Error creating directory: $e');
       }
 
-      // Open the database
-      // return await openDatabase(path, version: _databaseVersion);
-      return await databaseFactory.openDatabase(path);
-    } catch (e) {
-      print('Error initializing database: $e');
-      rethrow; // Optionally, rethrow to handle it further up the call stack
+      // Load database from assets
+      final data = await rootBundle.load('assets/bible.db');
+      final bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+
+      // Write the bytes to the file
+      await File(path).writeAsBytes(bytes, flush: true);
+    } else {
+      print('Opening existing database at $path');
     }
+
+    // Open the database using sqlite3
+    final db = sqlite3.open(path);
+    return db;
   }
 }

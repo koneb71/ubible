@@ -5,7 +5,7 @@ import 'package:ubible/utils/database_helper.dart';
 class ChapterListScreen extends StatefulWidget {
   final String book;
 
-  const ChapterListScreen({Key? key, required this.book}) : super(key: key);
+  const ChapterListScreen({super.key, required this.book});
 
   @override
   _ChapterListScreenState createState() => _ChapterListScreenState();
@@ -22,7 +22,7 @@ class _ChapterListScreenState extends State<ChapterListScreen> {
 
   Future<List<int>> _fetchChapters() async {
     final db = await DatabaseHelper.instance.database;
-    final maps = await db.rawQuery(
+    final maps = await db.select(
       'SELECT DISTINCT chapter FROM ceb_content WHERE book = ?',
       [widget.book],
     );

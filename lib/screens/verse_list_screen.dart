@@ -8,11 +8,11 @@ class VerseListScreen extends StatefulWidget {
   final int? initialVerse;
 
   const VerseListScreen({
-    Key? key,
+    super.key,
     required this.book,
     required this.chapter,
     this.initialVerse,
-  }) : super(key: key);
+  });
 
   @override
   _VerseListScreenState createState() => _VerseListScreenState();
@@ -36,10 +36,9 @@ class _VerseListScreenState extends State<VerseListScreen> {
 
   Future<List<Verse>> _fetchVerses() async {
     final db = await DatabaseHelper.instance.database;
-    final maps = await db.query(
-      'ceb_content',
-      where: 'book = ? AND chapter = ?',
-      whereArgs: [widget.book, widget.chapter],
+    final maps = await db.select(
+      'select * from ceb_content where book ? and chapter ?',
+      [widget.book, widget.chapter],
     );
     return maps.map((map) => Verse.fromMap(map)).toList();
   }
@@ -100,10 +99,10 @@ class VerseListItem extends StatelessWidget {
   final bool isHighlighted;
 
   const VerseListItem({
-    Key? key,
+    super.key,
     required this.verse,
     this.isHighlighted = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

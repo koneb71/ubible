@@ -5,7 +5,7 @@ import 'package:ubible/utils/database_helper.dart';
 import 'chapter_list_screen.dart';
 
 class BookListScreen extends StatefulWidget {
-  const BookListScreen({Key? key}) : super(key: key);
+  const BookListScreen({super.key});
 
   @override
   _BookListScreenState createState() => _BookListScreenState();
@@ -22,7 +22,7 @@ class _BookListScreenState extends State<BookListScreen> {
 
   Future<List<Book>> _fetchBooks() async {
     final db = await DatabaseHelper.instance.database;
-    final maps = await db.query('book_list_content');
+    final maps = await db.select('select * from book_list_content');
     return maps.map((map) => Book.fromMap(map)).toList();
   }
 

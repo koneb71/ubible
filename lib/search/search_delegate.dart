@@ -81,12 +81,11 @@ class BibleSearchDelegate extends SearchDelegate<Verse> {
   // Perform the search using the query
   Future<List<Verse>> _search(String query) async {
     final db = await DatabaseHelper.instance.database;
-    final maps = await db.rawQuery(
+    final maps = await db.select(
       '''
       SELECT CAST(rowid as UNSIGNED) id, book, chapter, verse, passage
       FROM ceb_content_fts WHERE passage MATCH ?
       ORDER BY rank
-      LIMIT 50
       ''',
       [query],
     );
