@@ -2,9 +2,9 @@ import 'dart:io';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/widgets.dart';
 import 'package:path/path.dart' as p;
-import 'package:sqflite/sqflite.dart' show getDatabasesPath;
-import 'package:sqlite3/sqlite3.dart';
-// import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+// import 'package:sqflite/sqflite.dart' show getDatabasesPath;
+// import 'package:sqlite3/sqlite3.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class DatabaseHelper {
   static final _databaseName = "bible.db";
@@ -50,7 +50,6 @@ class DatabaseHelper {
     }
 
     // Open the database using sqlite3
-    final db = sqlite3.open(path);
-    return db;
+    return await databaseFactory.openDatabase(path);
   }
 }

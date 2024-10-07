@@ -22,7 +22,7 @@ class _BookListScreenState extends State<BookListScreen> {
 
   Future<List<Book>> _fetchBooks() async {
     final db = await DatabaseHelper.instance.database;
-    final maps = db.select('select * from book_list_content');
+    final maps = await db.rawQuery('select * from book_list_content');
     return maps.map((map) => Book.fromMap(map)).toList();
   }
 

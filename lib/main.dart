@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:ubible/screens/book_list_screen.dart';
-// import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() {
-  // sqfliteFfiInit();
-  // databaseFactory = databaseFactoryFfi;
+  sqfliteFfiInit();
+  databaseFactory = databaseFactoryFfi;
   runApp(const BibleApp());
 }
 

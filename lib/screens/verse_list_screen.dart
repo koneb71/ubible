@@ -36,7 +36,7 @@ class _VerseListScreenState extends State<VerseListScreen> {
 
   Future<List<Verse>> _fetchVerses() async {
     final db = await DatabaseHelper.instance.database;
-    final maps = db.select(
+    final maps = await db.rawQuery(
       'select id, book, chapter, verse, passage from ceb_content where book = ? and chapter = ?',
       [widget.book, widget.chapter],
     );
